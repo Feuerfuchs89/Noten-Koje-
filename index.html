@@ -73,6 +73,7 @@ textarea{width:calc(100% - 24px);margin:8px 12px;height:130px;font:11px monospac
     <div class="g"><button data-a="prev">◀</button><button data-a="next">▶</button><button data-a="tp">Spur ↑</button><button data-a="tn">Spur ↓</button></div>
     <p class="hint">Eingabemodus: Notenwert wählen, dann Ton (C–H) tippen. Der Cursor springt weiter, am Ende kommt automatisch ein neuer Takt dazu.</p></div>
    <div class="cd"><h3>Bearbeiten</h3><div class="g"><button data-a="ins">＋ Note kopieren</button><button data-a="del">Löschen</button><button data-a="slur">Bogen</button></div></div>
+   <div class="cd" id="bes"><h3>Akkord &amp; Text</h3><div class="g"><label>Akkord <input type="text" id="cs" placeholder="D, G, A7, Hm" style="width:84px"></label><label>Text <input type="text" id="tx" placeholder="Vers:" style="width:96px"></label></div></div>
    <div class="cd" id="lyr"><h3>Liedtext</h3><div class="g"><label>EN <input type="text" id="l0" style="width:105px"></label><label>DE <input type="text" id="l1" style="width:105px"></label></div></div>
   </section>
   <section data-p="takt">
@@ -86,6 +87,9 @@ textarea{width:calc(100% - 24px);margin:8px 12px;height:130px;font:11px monospac
     <div class="g"><select id="keysel"></select></div>
     <div class="g"><label>Schluss <select id="endsel"><option value="rep">Wiederholungszeichen</option><option value="fin">Schlussstrich</option></select></label></div>
     <div class="g"><button data-a="fix">Taktsummen korrigieren</button></div></div>
+   <div class="cd"><h3>Wiederholung (gewählter Takt)</h3>
+    <div class="g"><button data-a="rs" id="rsb">𝄆 Beginn</button><button data-a="re" id="reb">Ende 𝄇</button></div>
+    <p class="hint">Beim Abspielen wird der Teil zwischen den Zeichen zweimal gespielt.</p></div>
   </section>
   <section data-p="stimme">
    <div class="cd"><h3>Ausgewählte Stimme</h3>
@@ -114,15 +118,16 @@ textarea{width:calc(100% - 24px);margin:8px 12px;height:130px;font:11px monospac
   </section>
   <section data-p="datei">
    <div class="cd"><h3>Stück</h3><div class="g"><label>Titel <input type="text" id="ttl" style="width:220px;max-width:60vw"></label></div>
-    <div class="g"><button data-a="new">Neues leeres Stück</button><button data-a="reset">Beispiel laden</button></div></div>
+    <div class="g"><button data-a="new">Neues leeres Stück</button><button data-a="reset">Beispiel: Schneeflöckchen</button><button data-a="huj">Beispiel: Hujedamej</button></div></div>
    <div class="cd"><h3>Export / Import</h3>
     <div class="g"><label>Export <select id="exp"></select></label><button data-a="dl">⬇ Speichern</button><button data-a="show">XML</button></div>
-    <div class="g"><label class="b">⬆ Öffnen (MusicXML)<input type="file" id="file" accept=".xml,.musicxml" hidden></label></div></div>
+    <div class="g"><label class="b">⬆ Öffnen (MusicXML / .mxl)<input type="file" id="file" accept=".xml,.musicxml,.mxl" hidden></label></div></div>
   </section>
  </div>
 </div>
 <script>
 const $=i=>document.getElementById(i),STEPS="CDEFGAB";
+const EX_HUJ="<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<!DOCTYPE score-partwise PUBLIC \"-//Recordare//DTD MusicXML 3.1 Partwise//EN\" \"http://www.musicxml.org/dtds/partwise.dtd\">\n<score-partwise version=\"3.1\">\n  <work>\n    <work-title>Hujedamej sånt barn han var</work-title>\n  </work>\n  <identification>\n    <encoding>\n      <software>Musikkoje (Abschrift aus Screenshot)</software>\n    </encoding>\n    <source>Notiert nach einem Screenshot von sheetmusicgo.com (Original key: D major)</source>\n  </identification>\n  <part-list>\n    <score-part id=\"P1\">\n      <part-name>Violine</part-name>\n    </score-part>\n  </part-list>\n  <part id=\"P1\">\n    <measure number=\"1\">\n      <attributes>\n        <divisions>4</divisions>\n        <key>\n          <fifths>2</fifths>\n          <mode>major</mode>\n        </key>\n        <time>\n          <beats>2</beats>\n          <beat-type>4</beat-type>\n        </time>\n        <clef>\n          <sign>G</sign>\n          <line>2</line>\n        </clef>\n      </attributes>\n      <barline location=\"left\">\n        <bar-style>heavy-light</bar-style>\n        <repeat direction=\"forward\" />\n      </barline>\n      <direction placement=\"above\">\n        <direction-type>\n          <metronome>\n            <beat-unit>quarter</beat-unit>\n            <per-minute>100</per-minute>\n          </metronome>\n        </direction-type>\n        <sound tempo=\"100\" />\n      </direction>\n      <direction placement=\"below\">\n        <direction-type>\n          <words font-style=\"italic\">Vers:</words>\n        </direction-type>\n      </direction>\n      <harmony>\n        <root>\n          <root-step>D</root-step>\n        </root>\n        <kind>major</kind>\n      </harmony>\n      <note>\n        <pitch>\n          <step>F</step>\n          <alter>1</alter>\n          <octave>4</octave>\n        </pitch>\n        <duration>2</duration>\n        <type>eighth</type>\n        <beam number=\"1\">begin</beam>\n      </note>\n      <note>\n        <pitch>\n          <step>F</step>\n          <alter>1</alter>\n          <octave>4</octave>\n        </pitch>\n        <duration>2</duration>\n        <type>eighth</type>\n        <beam number=\"1\">end</beam>\n      </note>\n      <note>\n        <pitch>\n          <step>G</step>\n          <octave>4</octave>\n        </pitch>\n        <duration>2</duration>\n        <type>eighth</type>\n        <beam number=\"1\">begin</beam>\n      </note>\n      <note>\n        <pitch>\n          <step>A</step>\n          <octave>4</octave>\n        </pitch>\n        <duration>2</duration>\n        <type>eighth</type>\n        <beam number=\"1\">end</beam>\n      </note>\n    </measure>\n    <measure number=\"2\">\n      <note>\n        <pitch>\n          <step>D</step>\n          <octave>4</octave>\n        </pitch>\n        <duration>2</duration>\n        <type>eighth</type>\n        <beam number=\"1\">begin</beam>\n      </note>\n      <note>\n        <pitch>\n          <step>D</step>\n          <octave>4</octave>\n        </pitch>\n        <duration>2</duration>\n        <type>eighth</type>\n        <beam number=\"1\">end</beam>\n      </note>\n      <note>\n        <pitch>\n          <step>E</step>\n          <octave>4</octave>\n        </pitch>\n        <duration>2</duration>\n        <type>eighth</type>\n        <beam number=\"1\">begin</beam>\n      </note>\n      <note>\n        <pitch>\n          <step>F</step>\n          <alter>1</alter>\n          <octave>4</octave>\n        </pitch>\n        <duration>2</duration>\n        <type>eighth</type>\n        <beam number=\"1\">end</beam>\n      </note>\n    </measure>\n    <measure number=\"3\">\n      <harmony>\n        <root>\n          <root-step>G</root-step>\n        </root>\n        <kind>major</kind>\n      </harmony>\n      <note>\n        <pitch>\n          <step>G</step>\n          <octave>3</octave>\n        </pitch>\n        <duration>2</duration>\n        <type>eighth</type>\n        <beam number=\"1\">begin</beam>\n      </note>\n      <note>\n        <pitch>\n          <step>G</step>\n          <octave>3</octave>\n        </pitch>\n        <duration>2</duration>\n        <type>eighth</type>\n        <beam number=\"1\">end</beam>\n      </note>\n      <note>\n        <pitch>\n          <step>B</step>\n          <octave>3</octave>\n        </pitch>\n        <duration>2</duration>\n        <type>eighth</type>\n        <beam number=\"1\">begin</beam>\n      </note>\n      <note>\n        <pitch>\n          <step>D</step>\n          <octave>4</octave>\n        </pitch>\n        <duration>2</duration>\n        <type>eighth</type>\n        <beam number=\"1\">end</beam>\n      </note>\n    </measure>\n    <measure number=\"4\">\n      <note>\n        <pitch>\n          <step>G</step>\n          <octave>4</octave>\n        </pitch>\n        <duration>4</duration>\n        <type>quarter</type>\n      </note>\n      <note>\n        <pitch>\n          <step>G</step>\n          <octave>4</octave>\n        </pitch>\n        <duration>4</duration>\n        <type>quarter</type>\n      </note>\n    </measure>\n    <measure number=\"5\">\n      <harmony>\n        <root>\n          <root-step>A</root-step>\n        </root>\n        <kind text=\"7\">dominant</kind>\n      </harmony>\n      <note>\n        <pitch>\n          <step>A</step>\n          <octave>3</octave>\n        </pitch>\n        <duration>2</duration>\n        <type>eighth</type>\n        <beam number=\"1\">begin</beam>\n      </note>\n      <note>\n        <pitch>\n          <step>A</step>\n          <octave>3</octave>\n        </pitch>\n        <duration>2</duration>\n        <type>eighth</type>\n        <beam number=\"1\">end</beam>\n      </note>\n      <note>\n        <pitch>\n          <step>C</step>\n          <alter>1</alter>\n          <octave>4</octave>\n        </pitch>\n        <duration>2</duration>\n        <type>eighth</type>\n        <beam number=\"1\">begin</beam>\n      </note>\n      <note>\n        <pitch>\n          <step>E</step>\n          <octave>4</octave>\n        </pitch>\n        <duration>2</duration>\n        <type>eighth</type>\n        <beam number=\"1\">end</beam>\n      </note>\n    </measure>\n    <measure number=\"6\">\n      <note>\n        <pitch>\n          <step>A</step>\n          <octave>4</octave>\n        </pitch>\n        <duration>4</duration>\n        <type>quarter</type>\n      </note>\n      <note>\n        <pitch>\n          <step>A</step>\n          <octave>4</octave>\n        </pitch>\n        <duration>3</duration>\n        <type>eighth</type>\n        <dot />\n        <beam number=\"1\">begin</beam>\n        <beam number=\"2\">forward hook</beam>\n      </note>\n      <note>\n        <pitch>\n          <step>B</step>\n          <octave>4</octave>\n        </pitch>\n        <duration>1</duration>\n        <type>16th</type>\n        <beam number=\"1\">end</beam>\n        <beam number=\"2\">backward hook</beam>\n      </note>\n    </measure>\n    <measure number=\"7\">\n      <harmony>\n        <root>\n          <root-step>A</root-step>\n        </root>\n        <kind text=\"7\">dominant</kind>\n      </harmony>\n      <note>\n        <pitch>\n          <step>A</step>\n          <octave>4</octave>\n        </pitch>\n        <duration>2</duration>\n        <type>eighth</type>\n        <beam number=\"1\">begin</beam>\n      </note>\n      <note>\n        <pitch>\n          <step>A</step>\n          <octave>4</octave>\n        </pitch>\n        <duration>2</duration>\n        <type>eighth</type>\n        <beam number=\"1\">end</beam>\n      </note>\n      <note>\n        <pitch>\n          <step>A</step>\n          <octave>4</octave>\n        </pitch>\n        <duration>2</duration>\n        <type>eighth</type>\n        <beam number=\"1\">begin</beam>\n      </note>\n      <note>\n        <pitch>\n          <step>G</step>\n          <octave>4</octave>\n        </pitch>\n        <duration>2</duration>\n        <type>eighth</type>\n        <beam number=\"1\">end</beam>\n      </note>\n    </measure>\n    <measure number=\"8\">\n      <harmony>\n        <root>\n          <root-step>D</root-step>\n        </root>\n        <kind>major</kind>\n      </harmony>\n      <note>\n        <pitch>\n          <step>F</step>\n          <alter>1</alter>\n          <octave>4</octave>\n        </pitch>\n        <duration>4</duration>\n        <type>quarter</type>\n      </note>\n      <note>\n        <rest />\n        <duration>4</duration>\n        <type>quarter</type>\n      </note>\n      <barline location=\"right\">\n        <bar-style>light-heavy</bar-style>\n        <repeat direction=\"backward\" />\n      </barline>\n    </measure>\n    <measure number=\"9\">\n      <barline location=\"left\">\n        <bar-style>heavy-light</bar-style>\n        <repeat direction=\"forward\" />\n      </barline>\n      <direction placement=\"below\">\n        <direction-type>\n          <words font-style=\"italic\">Refräng:</words>\n        </direction-type>\n      </direction>\n      <harmony>\n        <root>\n          <root-step>A</root-step>\n        </root>\n        <kind text=\"7\">dominant</kind>\n      </harmony>\n      <note>\n        <pitch>\n          <step>A</step>\n          <octave>4</octave>\n        </pitch>\n        <duration>8</duration>\n        <type>half</type>\n      </note>\n    </measure>\n    <measure number=\"10\">\n      <harmony>\n        <root>\n          <root-step>D</root-step>\n        </root>\n        <kind>major</kind>\n      </harmony>\n      <note>\n        <pitch>\n          <step>F</step>\n          <alter>1</alter>\n          <octave>4</octave>\n        </pitch>\n        <duration>2</duration>\n        <type>eighth</type>\n        <beam number=\"1\">begin</beam>\n      </note>\n      <note>\n        <pitch>\n          <step>D</step>\n          <octave>4</octave>\n        </pitch>\n        <duration>2</duration>\n        <type>eighth</type>\n        <beam number=\"1\">end</beam>\n      </note>\n      <note>\n        <pitch>\n          <step>E</step>\n          <octave>4</octave>\n        </pitch>\n        <duration>2</duration>\n        <type>eighth</type>\n        <beam number=\"1\">begin</beam>\n      </note>\n      <note>\n        <pitch>\n          <step>F</step>\n          <alter>1</alter>\n          <octave>4</octave>\n        </pitch>\n        <duration>2</duration>\n        <type>eighth</type>\n        <beam number=\"1\">end</beam>\n      </note>\n    </measure>\n    <measure number=\"11\">\n      <harmony>\n        <root>\n          <root-step>G</root-step>\n        </root>\n        <kind>major</kind>\n      </harmony>\n      <note>\n        <pitch>\n          <step>G</step>\n          <octave>4</octave>\n        </pitch>\n        <duration>3</duration>\n        <type>eighth</type>\n        <dot />\n        <beam number=\"1\">begin</beam>\n        <beam number=\"2\">forward hook</beam>\n      </note>\n      <note>\n        <pitch>\n          <step>G</step>\n          <octave>4</octave>\n        </pitch>\n        <duration>1</duration>\n        <type>16th</type>\n        <beam number=\"1\">end</beam>\n        <beam number=\"2\">backward hook</beam>\n      </note>\n      <note>\n        <pitch>\n          <step>G</step>\n          <octave>4</octave>\n        </pitch>\n        <duration>2</duration>\n        <type>eighth</type>\n        <beam number=\"1\">begin</beam>\n      </note>\n      <note>\n        <pitch>\n          <step>F</step>\n          <alter>1</alter>\n          <octave>4</octave>\n        </pitch>\n        <duration>2</duration>\n        <type>eighth</type>\n        <beam number=\"1\">end</beam>\n      </note>\n    </measure>\n    <measure number=\"12\">\n      <harmony>\n        <root>\n          <root-step>A</root-step>\n        </root>\n        <kind text=\"7\">dominant</kind>\n      </harmony>\n      <note>\n        <pitch>\n          <step>C</step>\n          <alter>1</alter>\n          <octave>4</octave>\n        </pitch>\n        <duration>2</duration>\n        <type>eighth</type>\n        <beam number=\"1\">begin</beam>\n      </note>\n      <note>\n        <pitch>\n          <step>C</step>\n          <alter>1</alter>\n          <octave>4</octave>\n        </pitch>\n        <duration>2</duration>\n        <type>eighth</type>\n        <beam number=\"1\">end</beam>\n      </note>\n      <note>\n        <pitch>\n          <step>D</step>\n          <octave>4</octave>\n        </pitch>\n        <duration>2</duration>\n        <type>eighth</type>\n        <beam number=\"1\">begin</beam>\n      </note>\n      <note>\n        <pitch>\n          <step>E</step>\n          <octave>4</octave>\n        </pitch>\n        <duration>2</duration>\n        <type>eighth</type>\n        <beam number=\"1\">end</beam>\n      </note>\n    </measure>\n    <measure number=\"13\">\n      <harmony>\n        <root>\n          <root-step>D</root-step>\n        </root>\n        <kind>major</kind>\n      </harmony>\n      <note>\n        <pitch>\n          <step>F</step>\n          <alter>1</alter>\n          <octave>4</octave>\n        </pitch>\n        <duration>4</duration>\n        <type>quarter</type>\n      </note>\n      <note>\n        <pitch>\n          <step>A</step>\n          <octave>4</octave>\n        </pitch>\n        <duration>4</duration>\n        <type>quarter</type>\n      </note>\n    </measure>\n    <measure number=\"14\">\n      <harmony>\n        <root>\n          <root-step>D</root-step>\n        </root>\n        <kind>major</kind>\n      </harmony>\n      <note>\n        <pitch>\n          <step>F</step>\n          <alter>1</alter>\n          <octave>4</octave>\n        </pitch>\n        <duration>2</duration>\n        <type>eighth</type>\n        <beam number=\"1\">begin</beam>\n      </note>\n      <note>\n        <pitch>\n          <step>D</step>\n          <octave>4</octave>\n        </pitch>\n        <duration>2</duration>\n        <type>eighth</type>\n        <beam number=\"1\">end</beam>\n      </note>\n      <note>\n        <pitch>\n          <step>E</step>\n          <octave>4</octave>\n        </pitch>\n        <duration>2</duration>\n        <type>eighth</type>\n        <beam number=\"1\">begin</beam>\n      </note>\n      <note>\n        <pitch>\n          <step>F</step>\n          <alter>1</alter>\n          <octave>4</octave>\n        </pitch>\n        <duration>2</duration>\n        <type>eighth</type>\n        <beam number=\"1\">end</beam>\n      </note>\n    </measure>\n    <measure number=\"15\">\n      <harmony>\n        <root>\n          <root-step>G</root-step>\n        </root>\n        <kind>major</kind>\n      </harmony>\n      <note>\n        <pitch>\n          <step>G</step>\n          <octave>4</octave>\n        </pitch>\n        <duration>3</duration>\n        <type>eighth</type>\n        <dot />\n        <beam number=\"1\">begin</beam>\n        <beam number=\"2\">forward hook</beam>\n      </note>\n      <note>\n        <pitch>\n          <step>A</step>\n          <octave>4</octave>\n        </pitch>\n        <duration>1</duration>\n        <type>16th</type>\n        <beam number=\"1\">end</beam>\n        <beam number=\"2\">backward hook</beam>\n      </note>\n      <note>\n        <pitch>\n          <step>B</step>\n          <octave>4</octave>\n        </pitch>\n        <duration>2</duration>\n        <type>eighth</type>\n        <beam number=\"1\">begin</beam>\n      </note>\n      <note>\n        <pitch>\n          <step>B</step>\n          <octave>4</octave>\n        </pitch>\n        <duration>2</duration>\n        <type>eighth</type>\n        <beam number=\"1\">end</beam>\n      </note>\n    </measure>\n    <measure number=\"16\">\n      <harmony>\n        <root>\n          <root-step>A</root-step>\n        </root>\n        <kind text=\"7\">dominant</kind>\n      </harmony>\n      <note>\n        <pitch>\n          <step>A</step>\n          <octave>4</octave>\n        </pitch>\n        <duration>2</duration>\n        <type>eighth</type>\n        <beam number=\"1\">begin</beam>\n      </note>\n      <note>\n        <pitch>\n          <step>A</step>\n          <octave>4</octave>\n        </pitch>\n        <duration>2</duration>\n        <type>eighth</type>\n        <beam number=\"1\">end</beam>\n      </note>\n      <note>\n        <pitch>\n          <step>C</step>\n          <alter>1</alter>\n          <octave>4</octave>\n        </pitch>\n        <duration>2</duration>\n        <type>eighth</type>\n        <beam number=\"1\">begin</beam>\n      </note>\n      <note>\n        <pitch>\n          <step>C</step>\n          <alter>1</alter>\n          <octave>4</octave>\n        </pitch>\n        <duration>2</duration>\n        <type>eighth</type>\n        <beam number=\"1\">end</beam>\n      </note>\n    </measure>\n    <measure number=\"17\">\n      <harmony>\n        <root>\n          <root-step>D</root-step>\n        </root>\n        <kind>major</kind>\n      </harmony>\n      <note>\n        <pitch>\n          <step>D</step>\n          <octave>4</octave>\n        </pitch>\n        <duration>8</duration>\n        <type>half</type>\n      </note>\n      <barline location=\"right\">\n        <bar-style>light-heavy</bar-style>\n        <repeat direction=\"backward\" />\n      </barline>\n    </measure>\n  </part>\n</score-partwise>";
 const EN=["O","","snow","flakes,","how","gent","ly","you","","fall","on","my","hand,","you","","come","down","from","heav","en,","on","","earth","you","will","land."];
 const DE=["Schnee","","flöck","chen,","weiß","Röck","chen,","da","","kommst","du","ge","schneit,","du","","kommst","aus","den","Wol","ken,","dein","","Weg","ist","so","weit."];
 const SRC=["F#4/1s,G4/1e|A4/2,A4/2,B4/2|F#4/2,F#4/2,F#4/1s,G4/1e|A4/2,A4/2,B4/2|F#4/4,F#4/1s,G4/1e|A4/2,A4/2,D5/2|C#5/2,B4/2,A4/1s,G4/1e|F#4/2,G4/2,E4/2|D4/4",
@@ -143,13 +148,13 @@ const ps=(s,a,o)=>s+(a>0?"#":a<0?"b":"")+o;
 const mkR=d=>({s:"C",o:4,a:0,d,sl:"",ch:[],r:true,ly:["",""]});
 function build(){let k=0;const S=SRC.map((p,pi)=>p.split("|").map(ms=>ms.split(",").map(tk=>{const[pl,df]=tk.split("/"),q=pl.split("+"),n=pp(q[0]);
  n.d=4*+df.match(/\d+/)[0];n.sl=df.replace(/\d/g,"");n.ch=q.slice(1);n.r=false;n.ly=pi==0?[EN[k],DE[k++]]:["",""];return n})));
- return{S,M:{title:"O Snowflakes how Gently / Schneeflöckchen",names:["Violin I","Violin II","Viola","Cello"],clefs:[{s:"G",l:2},{s:"G",l:2},{s:"C",l:3},{s:"F",l:4}],ins:[0,0,1,2],exp:[2,6,6,6,6,6,6,6,4].map(x=>x*4),ts:[3,4],key:2,bpm:84,vol:[100,100,100,100],end:"rep"}}}
+ return{S,M:{title:"O Snowflakes how Gently / Schneeflöckchen",names:["Violin I","Violin II","Viola","Cello"],clefs:[{s:"G",l:2},{s:"G",l:2},{s:"C",l:3},{s:"F",l:4}],ins:[0,0,1,2],exp:[2,6,6,6,6,6,6,6,4].map(x=>x*4),ts:[3,4],key:2,bpm:84,vol:[100,100,100,100],end:"rep",mk:Array(9).fill(0).map(()=>({}))}}}
 // ---------- Zustand ----------
 let S,M,sel={p:0,m:1,i:0},hist=[],redo=[],CC=[],curB=8,curDot=false;const HID=new Set();
 const ST={theme:"auto",tab:"note",entry:false,auto:true,bpl:0,zoom:100,nums:true,met:false,rev:true,mvol:100,from:true,min:false};
 try{Object.assign(ST,JSON.parse(localStorage.getItem("noten_set")||"{}"))}catch(e){}
 const saveST=()=>{try{localStorage.setItem("noten_set",JSON.stringify(ST))}catch(e){}};
-function norm(d){const m=d.M;m.vol=m.vol||[];d.S.forEach((_,p)=>{if(m.vol[p]==null)m.vol[p]=100});m.bpm=m.bpm||84;m.end=m.end||"rep";return d}
+function norm(d){const m=d.M;m.vol=m.vol||[];d.S.forEach((_,p)=>{if(m.vol[p]==null)m.vol[p]=100});m.bpm=m.bpm||84;m.end=m.end||"rep";m.mk=Array.isArray(m.mk)?m.mk:[];while(m.mk.length<m.exp.length)m.mk.push({});m.mk.length=m.exp.length;m.mk=m.mk.map(x=>x||{});return d}
 (function(){let d=null;try{d=JSON.parse(localStorage.getItem("snow_v4"))}catch(e){}
  if(!d||!d.S||!d.M){try{const o=JSON.parse(localStorage.getItem("snow_v3"));if(o&&o.S&&o.M){o.S.forEach(pt=>pt.forEach(me=>me.forEach(n=>n.d*=4)));o.M.exp=o.M.exp.map(x=>x*4);d=o}}catch(e){d=null}}
  if(!d||!d.S||!d.M)d=build();
@@ -174,7 +179,7 @@ function setSize(me,len){const tot=me.reduce((a,n)=>a+n.d,0);if(tot==len)return;
  const out=[];let t=0;for(const n of me){if(t>=len)break;if(t+n.d<=len){out.push(n);t+=n.d;continue}
   const r=len-t;if(n.r)out.push(...rests(r,t));else{const k=[...ALLOW].reverse().find(v=>v<=r);n.d=k;out.push(n);if(r-k)out.push(...rests(r-k,t+k))}t=len}
  me.splice(0,me.length,...out)}
-function appendMeasures(k){for(let j=0;j<k;j++){S.forEach(pt=>pt.push(rests(full())));M.exp.push(full())}}
+function appendMeasures(k){for(let j=0;j<k;j++){S.forEach(pt=>pt.push(rests(full())));M.exp.push(full());M.mk.push({})}}
 function setTS(a,b){if(!(a>=1&&a<=32))return;snap();const of=full(),old=M.exp.slice(),pick=old[0]<of,last=old.length-1;M.ts=[a,b];const nf=full(),e0=pick?Math.min(old[0],nf):nf;
  M.exp=old.map((e,m)=>{if(!pick||e0>=nf)return nf;if(m==0)return e0;if(m==last&&old[last]==of-old[0])return nf-e0;return nf});
  S.forEach(pt=>pt.forEach((me,m)=>setSize(me,M.exp[m])));save();render()}
@@ -195,7 +200,7 @@ const L0=22,R0=10,SHW=5.2;
 function colsOf(m,V){const T=new Set([0]);V.forEach(p=>{let t=0;S[p][m].forEach(n=>{T.add(t);t+=n.d})});
  const ex=M.exp[m],a=[...T].filter(t=>t<ex).sort((x,y)=>x-y),off={};let acc=0;
  a.forEach((t,i)=>{off[t]=acc;acc+=14+22*Math.pow(((i+1<a.length?a[i+1]:ex)-t)/8,.55)});
- return{off,acc,W:L0+acc+R0}}
+ const mk=M.mk[m]||{},l0=L0+(mk.rs?12:0),r0=R0+(mk.re?8:0);return{off,acc,l0,W:l0+acc+r0}}
 function layout(){const w=$("sc").clientWidth||360,k=+ST.bpl||(w<520?2:w<900?3:4),cap=k>9?1e9:k*190,L=[];let c=[],ws=0;
  CC.forEach((q,m)=>{if(c.length&&ws+q.W>cap){L.push(c);c=[];ws=0}c.push(m);ws+=q.W});L.push(c);return L}
 function vis(){const v=S.map((_,p)=>p).filter(p=>!HID.has(p));return v.length?v:S.map((_,p)=>p)}
@@ -211,7 +216,7 @@ function restSVG(x,top,d,whole){
 const isSel=(p,m,i)=>PLAY?PL.has(p+","+m+","+i):(sel.p==p&&sel.m==m&&sel.i==i);
 function meas(p,m,mx,fs,top,bot,ref,KM,Rs){
  const me=S[p][m],ex=M.exp[m],c=CC[m],mid=ref+4,Y=d=>bot-(d-ref)*4,st={},pick=M.exp[0]<full(),T=[],X=[];
- let t=0;me.forEach(n=>{T.push(t);X.push(mx+(L0+(c.off[t]!==undefined?c.off[t]:c.acc))*fs);t+=n.d});
+ let t=0;me.forEach(n=>{T.push(t);X.push(mx+(c.l0+(c.off[t]!==undefined?c.off[t]:c.acc))*fs);t+=n.d});
  const bl=beatLen(),po=(m==0&&pick)?full()-M.exp[0]:0,G=[],gi=me.map(()=>-1),ext=n=>{const ds=[dp(n),...n.ch.map(q=>dp(pp(q)))];return[Math.min(...ds),Math.max(...ds)]};
  let cg=null;me.forEach((n,i)=>{if(!n.r&&lv(n.d)>0){const k=Math.floor((po+T[i])/bl);if(cg&&cg.k==k)cg.idx.push(i);else{cg={k,idx:[i]};G.push(cg)}gi[i]=G.length-1}else cg=null});
  G.forEach(gr=>{if(gr.idx.length<2)return;let sm=0,ml=1;gr.idx.forEach(i=>{const[a,b]=ext(me[i]);sm+=(a+b)/2;ml=Math.max(ml,lv(me[i].d))});
@@ -237,6 +242,8 @@ function meas(p,m,mx,fs,top,bot,ref,KM,Rs){
    if(n.sl=="s")Rs.sl={x,y:y+dirv*9};
    if(n.sl=="e"&&Rs.sl){const ey=y+dirv*9,cy=(dirv>0?Math.max(Rs.sl.y,ey):Math.min(Rs.sl.y,ey))+dirv*8;g+=`<path class="ln" d="M${Rs.sl.x} ${Rs.sl.y} Q${(Rs.sl.x+x)/2} ${cy} ${x} ${ey}"/>`;Rs.sl=null}}
   if(n.ly[0]||n.ly[1])g+=`<text x="${x-5}" y="${bot+30}" font-size="12">${esc(n.ly[0])}</text><text x="${x-5}" y="${bot+46}" font-size="12" style="fill:var(--mut)">${esc(n.ly[1])}</text>`;
+  if(n.cs)g+=`<text x="${x-6}" y="${top-10}" font-size="13" font-weight="bold">${esc(n.cs)}</text>`;
+  if(n.tx)g+=`<text x="${x-6}" y="${top-25}" font-size="12" font-style="italic">${esc(n.tx)}</text>`;
   o+=g+"</g>"});
  G.forEach(gr=>{if(gr.idx.length<2)return;const sg=gr.up?1:-1,sxs=gr.idx.map(i=>gr.up?X[i]+SHW:X[i]-SHW),k0=gr.idx.length;
   for(let k=1;k<=gr.ml;k++){const yk=gr.yb+sg*5*(k-1);let j=0;
@@ -249,7 +256,7 @@ function render(){
  clamp();const V=vis();if(!V.includes(sel.p)){sel={p:V[0],m:Math.min(sel.m,M.exp.length-1),i:0}}
  const N=V.length,KM=keyMap(),kc=Math.abs(M.key),pick=M.exp[0]<full();CC=M.exp.map((_,m)=>colsOf(m,V));
  const lay=layout(),sw=lay.map(ms=>ms.reduce((a,m)=>a+CC[m].W,0)),TW=Math.max(...sw),SH=N*130+30;let o="",LW=0;
- lay.forEach((ms,si)=>{const LM=84+kc*9+(si==0?24:6),y0=40+si*SH,fs=si<lay.length-1?Math.min(1.4,TW/sw[si]):1,Rs={ph:null},ws=sw[si]*fs;LW=Math.max(LW,LM+ws);
+ lay.forEach((ms,si)=>{const LM=84+kc*9+(si==0?24:6),y0=56+si*SH,fs=si<lay.length-1?Math.min(1.4,TW/sw[si]):1,Rs={ph:null},ws=sw[si]*fs;LW=Math.max(LW,LM+ws);
   V.forEach((p,row)=>{const top=y0+row*130,bot=top+32,ref=REF(p),Y=d=>bot-(d-ref)*4,cl=M.clefs[p];Rs.sl=null;
    if(si==0)o+=`<text x="60" y="${top-8}" font-size="12">${esc(M.names[p])}</text>`;
    for(let l=0;l<5;l++)o+=`<line class="ln" x1="60" x2="${LM+ws}" y1="${top+l*8}" y2="${top+l*8}"/>`;
@@ -259,10 +266,14 @@ function render(){
    let mx=LM;
    ms.forEach(m=>{const W=CC[m].W*fs,last=m==M.exp.length-1;
     if(ST.nums&&row==0&&!(m==0&&pick))o+=`<text x="${mx+3}" y="${top-6}" font-size="10" style="fill:var(--mut)">${m+(pick?0:1)}</text>`;
+    const mk=M.mk[m]||{};
+    if(mk.rs)o+=`<line class="ln" style="stroke-width:3" x1="${mx+2.5}" x2="${mx+2.5}" y1="${top}" y2="${bot}"/><line class="ln" x1="${mx+7}" x2="${mx+7}" y1="${top}" y2="${bot}"/><circle class="rs" cx="${mx+12}" cy="${top+12}" r="2"/><circle class="rs" cx="${mx+12}" cy="${top+20}" r="2"/>`;
     o+=meas(p,m,mx,fs,top,bot,ref,KM,Rs);mx+=W;
     if(last){o+=`<line class="ln" x1="${mx-5}" x2="${mx-5}" y1="${top}" y2="${bot}"/><line class="ln" x1="${mx}" x2="${mx}" y1="${top}" y2="${bot}" stroke-width="3"/>`;
-     if(M.end!="fin")o+=`<circle class="rs" cx="${mx-10}" cy="${top+12}" r="2"/><circle class="rs" cx="${mx-10}" cy="${top+20}" r="2"/>`}
-    else o+=`<line class="ln" x1="${mx}" x2="${mx}" y1="${top}" y2="${bot}"/>`})});
+     if(M.end!="fin"||mk.re)o+=`<circle class="rs" cx="${mx-10}" cy="${top+12}" r="2"/><circle class="rs" cx="${mx-10}" cy="${top+20}" r="2"/>`}
+    else if(mk.re)o+=`<line class="ln" x1="${mx-6}" x2="${mx-6}" y1="${top}" y2="${bot}"/><line class="ln" style="stroke-width:3" x1="${mx-1.5}" x2="${mx-1.5}" y1="${top}" y2="${bot}"/><circle class="rs" cx="${mx-11}" cy="${top+12}" r="2"/><circle class="rs" cx="${mx-11}" cy="${top+20}" r="2"/>`;
+    else o+=`<line class="ln" x1="${mx}" x2="${mx}" y1="${top}" y2="${bot}"/>`})
+   if(si==0&&row==0)o+=`<text x="${LM}" y="${top-40}" font-size="12">♩ = ${M.bpm}</text>`});
   if(Rs.ph!==null)o+=`<line x1="${Rs.ph}" x2="${Rs.ph}" y1="${y0-16}" y2="${y0+(V.length-1)*130+48}" stroke="var(--acc)" stroke-width="2" opacity=".45"/>`});
  $("sc").innerHTML=`<svg viewBox="0 0 ${LW+16} ${lay.length*SH+10}" style="width:${ST.zoom}%;max-width:${(LW+16)*1.5*ST.zoom/100}px">${o}</svg>`;info()}
 // ---------- Anzeige der Bedienelemente ----------
@@ -275,7 +286,8 @@ function info(){const n=cur(),pick=M.exp[0]<full();$("ti").textContent=M.title;
  $("cnt").textContent=`${M.exp.length} Takte · ${M.ts[0]}/${M.ts[1]}`;
  document.querySelectorAll("#durs button").forEach(b=>b.classList.toggle("on",+b.dataset.d==curB));
  $("dotb").classList.toggle("on",curDot);$("restb").classList.toggle("on",!!n&&n.r);$("entryb").classList.toggle("on",ST.entry);$("autoc").checked=ST.auto;
- $("lyr").hidden=!n;if(n){setv($("l0"),n.ly[0]);setv($("l1"),n.ly[1])}
+ $("lyr").hidden=!n;$("bes").hidden=!n;if(n){setv($("cs"),n.cs||"");setv($("tx"),n.tx||"")}
+ $("rsb").classList.toggle("on",!!M.mk[sel.m]&&!!M.mk[sel.m].rs);$("reb").classList.toggle("on",!!M.mk[sel.m]&&!!M.mk[sel.m].re);if(n){setv($("l0"),n.ly[0]);setv($("l1"),n.ly[1])}
  setv($("ins"),M.ins[sel.p]);setv($("vn"),M.names[sel.p]);setv($("clef"),M.clefs[sel.p].s+M.clefs[sel.p].l);setv($("vol"),M.vol[sel.p]);$("volo").textContent=M.vol[sel.p]+"%";
  setv($("keysel"),M.key);setv($("endsel"),M.end);setv($("tsn"),M.ts[0]);setv($("tsd"),M.ts[1]);setv($("ttl"),M.title);
  setv($("bpm"),M.bpm);setv($("bpmr"),M.bpm);$("bpmo").textContent=M.bpm;
@@ -317,7 +329,7 @@ function pitchKey(step){const n=cur();if(!n)return;let ref=null;
  if(ref===null)ref=REF(sel.p)+4;const idx=STEPS.indexOf(step);let bo=4,bd=1e9;
  for(let o=0;o<=8;o++){const dd=Math.abs(o*7+idx-ref);if(dd<bd||(dd==bd&&o>bo)){bd=dd;bo=o}}
  snap();if(!placeNote(bo*7+idx)){hist.pop();return}save();render();follow()}
-const EDIT=new Set(["up","dn","sh","fl","na","nu8","nd8","rest","ins","del","slur","mins","minb","mapp","mdel","mdup","mclr","o8","u8","h1","h2","fix","vadd","vdel"]);
+const EDIT=new Set(["rs","re","huj","up","dn","sh","fl","na","nu8","nd8","rest","ins","del","slur","mins","minb","mapp","mdel","mdup","mclr","o8","u8","h1","h2","fix","vadd","vdel"]);
 function act(a){if(EDIT.has(a))snap();const me=S[sel.p][sel.m],n=me[sel.i];
  switch(a){
  case"undo":if(hist.length){redo.push(JSON.stringify({S,M}));restore(hist.pop())}return;
@@ -328,19 +340,21 @@ function act(a){if(EDIT.has(a))snap();const me=S[sel.p][sel.m],n=me[sel.i];
  case"prev":nav(-1);break;case"next":nav(1);break;
  case"rest":if(n){n.r=!n.r;if(n.r){n.sl="";n.ch=[]}}break;
  case"dot":durChange(null,!curDot);return;
- case"ins":if(n){const c=JSON.parse(JSON.stringify(n));c.sl="";c.ly=["",""];me.splice(sel.i+1,0,c);sel.i++;if(ST.auto){let over=me.reduce((x,e)=>x+e.d,0)-M.exp[sel.m];for(let j=me.length-1;j>sel.i&&over>0;j--){if(me[j].r&&me[j].d<=over){over-=me[j].d;me.splice(j,1)}}}}break;
+ case"ins":if(n){const c=JSON.parse(JSON.stringify(n));c.sl="";c.ly=["",""];c.cs="";c.tx="";me.splice(sel.i+1,0,c);sel.i++;if(ST.auto){let over=me.reduce((x,e)=>x+e.d,0)-M.exp[sel.m];for(let j=me.length-1;j>sel.i&&over>0;j--){if(me[j].r&&me[j].d<=over){over-=me[j].d;me.splice(j,1)}}}}break;
  case"del":if(n){if(n.sl)unslur(sel.p,sel.m,sel.i);
   if(ST.auto){const t=onset(me,sel.i);if(!n.r){n.r=true;n.ch=[];n.ly=["",""]}else{mergeRests(me);let a=0;sel.i=Math.max(0,me.findIndex(e=>{const ok=t>=a&&t<a+e.d;a+=e.d;return ok}))}}
   else if(me.length==1)n.r=true;else{me.splice(sel.i,1);sel.i=Math.max(0,sel.i-1)}}break;
  case"slur":if(n){if(n.sl)unslur(sel.p,sel.m,sel.i);else{const q=nextEv(sel.p,sel.m,sel.i,1);if(q){n.sl="s";S[sel.p][q[0]][q[1]].sl="e"}}}break;
- case"mins":S.forEach(pt=>pt.splice(sel.m+1,0,rests(full())));M.exp.splice(sel.m+1,0,full());sel={p:sel.p,m:sel.m+1,i:0};break;
- case"minb":S.forEach(pt=>pt.splice(sel.m,0,rests(full())));M.exp.splice(sel.m,0,full());sel={p:sel.p,m:sel.m,i:0};break;
+ case"mins":S.forEach(pt=>pt.splice(sel.m+1,0,rests(full())));M.exp.splice(sel.m+1,0,full());M.mk.splice(sel.m+1,0,{});sel={p:sel.p,m:sel.m+1,i:0};break;
+ case"minb":S.forEach(pt=>pt.splice(sel.m,0,rests(full())));M.exp.splice(sel.m,0,full());M.mk.splice(sel.m,0,{});sel={p:sel.p,m:sel.m,i:0};break;
  case"mapp":{const k=Math.max(1,Math.min(64,+$("mcnt").value||1));appendMeasures(k);sel={p:sel.p,m:M.exp.length-k,i:0};flash(k==1?"Takt angehängt":k+" Takte angehängt");break}
- case"mdup":S.forEach(pt=>pt.splice(sel.m+1,0,JSON.parse(JSON.stringify(pt[sel.m]))));M.exp.splice(sel.m+1,0,M.exp[sel.m]);sel={p:sel.p,m:sel.m+1,i:0};break;
+ case"mdup":S.forEach(pt=>pt.splice(sel.m+1,0,JSON.parse(JSON.stringify(pt[sel.m]))));M.exp.splice(sel.m+1,0,M.exp[sel.m]);M.mk.splice(sel.m+1,0,{});sel={p:sel.p,m:sel.m+1,i:0};break;
  case"mclr":S[sel.p][sel.m]=rests(M.exp[sel.m]);sel.i=0;break;
- case"mdel":if(M.exp.length>1){S.forEach(pt=>pt.splice(sel.m,1));M.exp.splice(sel.m,1);sel={p:sel.p,m:Math.min(sel.m,M.exp.length-1),i:0}}else flash("Der letzte Takt kann nicht gelöscht werden");break;
+ case"mdel":if(M.exp.length>1){S.forEach(pt=>pt.splice(sel.m,1));M.exp.splice(sel.m,1);M.mk.splice(sel.m,1);sel={p:sel.p,m:Math.min(sel.m,M.exp.length-1),i:0}}else flash("Der letzte Takt kann nicht gelöscht werden");break;
  case"o8":tr(sel.p,0,1);break;case"u8":tr(sel.p,0,-1);break;case"h1":tr(sel.p,1,0);break;case"h2":tr(sel.p,-1,0);break;
  case"fix":S.forEach(pt=>pt.forEach((e,m)=>setSize(e,M.exp[m])));break;
+ case"rs":M.mk[sel.m].rs=!M.mk[sel.m].rs;break;case"re":M.mk[sel.m].re=!M.mk[sel.m].re;break;
+ case"huj":if(confirm("Hujedamej laden und Änderungen verwerfen? (Rückgängig ist möglich)")){hist.pop();importXml(EX_HUJ)}else hist.pop();return;
  case"vadd":S.push(M.exp.map(e=>rests(e)));M.names.push("Stimme "+S.length);M.clefs.push({s:"G",l:2});M.ins.push(0);M.vol.push(100);sel={p:S.length-1,m:sel.m,i:0};fill();break;
  case"vdel":if(S.length<2){flash("Mindestens eine Stimme nötig");hist.pop();return}
   if(!confirm("Stimme „"+M.names[sel.p]+"“ entfernen?")){hist.pop();return}
@@ -354,7 +368,7 @@ function act(a){if(EDIT.has(a))snap();const me=S[sel.p][sel.m],n=me[sel.i];
  case"reset":if(confirm("Beispielstück laden und Änderungen verwerfen? (Rückgängig ist möglich)")){snap();({S,M}=build());HID.clear();sel={p:0,m:1,i:0};fill()}break;
  }
  clamp();save();render();follow()}
-function newPiece(){const e=Array(8).fill(32);S=[e.map(x=>rests(x))];M={title:"Neues Stück",names:["Stimme 1"],clefs:[{s:"G",l:2}],ins:[0],exp:e,ts:[4,4],key:0,bpm:100,vol:[100],end:"fin"};HID.clear();sel={p:0,m:0,i:0};save();fill();render()}
+function newPiece(){const e=Array(8).fill(32);S=[e.map(x=>rests(x))];M={title:"Neues Stück",names:["Stimme 1"],clefs:[{s:"G",l:2}],ins:[0],exp:e,ts:[4,4],key:0,bpm:100,vol:[100],end:"fin",mk:e.map(()=>({}))};HID.clear();sel={p:0,m:0,i:0};save();fill();render()}
 // ---------- Ereignisse ----------
 document.addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;
  if(b.dataset.d){durChange(+b.dataset.d,false)}else if(b.dataset.s){pitchKey(b.dataset.s)}
@@ -366,6 +380,7 @@ $("sc").addEventListener("click",e=>{const g=e.target.closest("[data-n]");if(!g)
  if(ST.entry&&n&&n.r){const sv=$("sc").querySelector("svg"),pt=sv.createSVGPoint();pt.x=e.clientX;pt.y=e.clientY;const q=pt.matrixTransform(sv.getScreenCTM().inverse()),dd=+g.dataset.r+Math.round((+g.dataset.b-q.y)/4);
   snap();if(!placeNote(dd))hist.pop();save();render();follow();return}
  render();preview()});
+["cs","tx"].forEach(id=>{$(id).addEventListener("focus",snap);$(id).addEventListener("input",e=>{const n=cur();if(n){n[id]=e.target.value;save();render()}})});
 ["l0","l1"].forEach((id,k)=>{$(id).addEventListener("focus",snap);$(id).addEventListener("input",e=>{const n=cur();if(n){n.ly[k]=e.target.value;save();render()}})});
 const onVal=(id,fn,hs)=>{$(id).addEventListener("focus",()=>{if(hs)snap()});$(id).addEventListener("input",e=>{fn(e.target.value,e);save();render()})};
 onVal("vn",v=>{M.names[sel.p]=v},1);onVal("ttl",v=>{M.title=v},1);
@@ -400,14 +415,21 @@ document.addEventListener("keydown",e=>{if(["INPUT","SELECT","TEXTAREA"].include
 const px=(s,a,o)=>`<pitch><step>${s}</step>${a?`<alter>${a}</alter>`:""}<octave>${o}</octave></pitch>`;
 const CLX=c=>`<sign>${c.s}</sign><line>${c.l}</line>`;
 function clefOf(p){if(INSTR[M.ins[p]][0]!="Klavier")return M.clefs[p];const a=S[p].flat().filter(n=>!n.r),av=a.reduce((t,n)=>t+dp(n),0)/(a.length||1);return{s:av>=28?"G":"F",l:av>=28?2:4}}
+const CK={"":["major",0],m:["minor",0],"7":["dominant",0],m7:["minor-seventh",0],maj7:["major-seventh",0],dim:["diminished",0],aug:["augmented",0],sus4:["suspended-fourth",0],sus2:["suspended-second",0],"6":["major-sixth",0],m6:["minor-sixth",0]};
+function harmX(cs){const t=(cs||"").trim(),m=/^([A-Ha-h])([#b]?)(.*)$/.exec(t);if(!m)return"";let L=m[1].toUpperCase(),a=m[2]=="#"?1:m[2]=="b"?-1:0;
+ if(L=="H")L="B";else if(L=="B"&&!m[2]&&m[1]=="B")a=-1;
+ const k=m[3],ent=CK[k],kind=ent?ent[0]:"other";return`<harmony><root><root-step>${L}</root-step>${a?`<root-alter>${a}</root-alter>`:""}</root><kind${k?` text="${esc(k)}"`:""}>${kind}</kind></harmony>`}
+const wordsX=t=>t?`<direction placement="above"><direction-type><words font-style="italic">${esc(t)}</words></direction-type></direction>`:"";
 function nx(n,lyr,v,st){const b=`<duration>${n.d}</duration>${v?`<voice>${v}</voice>`:""}<type>${TY[n.d]}</type>${dots(n.d)?"<dot/>":""}${st?`<staff>${st}</staff>`:""}`;
  const nt=n.sl=="s"?'<notations><slur type="start" number="1"/></notations>':n.sl=="e"?'<notations><slur type="stop" number="1"/></notations>':"";
  let ly="";if(lyr&&!n.r)n.ly.forEach((t,k)=>{if(t)ly+=`<lyric number="${k+1}"><syllabic>single</syllabic><text>${esc(t)}</text></lyric>`});
- let x=`<note>${n.r?"<rest/>":px(n.s,n.a,n.o)}${b}${nt}${ly}</note>`;
+ let x=(lyr?wordsX(n.tx)+harmX(n.cs):"")+`<note>${n.r?"<rest/>":px(n.s,n.a,n.o)}${b}${nt}${ly}</note>`;
  if(!n.r)n.ch.forEach(c=>{const q=pp(c);x+=`<note><chord/>${px(q.s,q.a,q.o)}${b}</note>`});return x}
 const HEAD=c=>`<divisions>8</divisions><key><fifths>${M.key}</fifths></key><time><beats>${M.ts[0]}</beats><beat-type>${M.ts[1]}</beat-type></time>${c}`;
 const TEMPO=()=>`<direction placement="above"><direction-type><metronome><beat-unit>quarter</beat-unit><per-minute>${M.bpm}</per-minute></metronome></direction-type><sound tempo="${M.bpm}"/></direction>`;
-const END=()=>`<barline location="right"><bar-style>light-heavy</bar-style>${M.end=="fin"?"":'<repeat direction="backward"/>'}</barline>`;
+const END=(m)=>`<barline location="right"><bar-style>light-heavy</bar-style>${M.end=="fin"&&!(M.mk[m]||{}).re?"":'<repeat direction="backward"/>'}</barline>`;
+const LB=m=>(M.mk[m]||{}).rs?'<barline location="left"><bar-style>heavy-light</bar-style><repeat direction="forward"/></barline>':"";
+const RB=(m,L)=>m==L?END(m):(M.mk[m]||{}).re?'<barline location="right"><bar-style>light-heavy</bar-style><repeat direction="backward"/></barline>':"";
 const sp=(id,name,iname,prog,vol)=>`<score-part id="${id}"><part-name>${esc(name)}</part-name><score-instrument id="${id}-I1"><instrument-name>${iname}</instrument-name></score-instrument><midi-instrument id="${id}-I1"><midi-channel>1</midi-channel><midi-program>${prog}</midi-program><volume>${vol}</volume></midi-instrument></score-part>`;
 const MH=m=>`<measure number="${m}"${m==0&&M.exp[0]<full()?' implicit="yes"':""}>`;
 function xml(mode){mode=mode||"all";const N=S.length,L=M.exp.length-1;
@@ -416,30 +438,38 @@ function xml(mode){mode=mode||"all";const N=S.length,L=M.exp.length-1;
  if(mode=="piano")x+=sp("P1","Klavier","Klavier",1,100);else P.forEach((p,k)=>x+=sp("P"+(k+1),M.names[p],INSTR[M.ins[p]][0],INSTR[M.ins[p]][1],M.vol[p]));
  x+="</part-list>\n";
  if(mode=="piano"){const h=Math.ceil(N/2);x+='<part id="P1">\n';
-  for(let m=0;m<=L;m++){x+=MH(m);if(m==0)x+=`<attributes>${HEAD("")}<staves>2</staves><clef number="1">${CLX({s:"G",l:2})}</clef><clef number="2">${CLX({s:"F",l:4})}</clef></attributes>${TEMPO()}`;
+  for(let m=0;m<=L;m++){x+=MH(m)+LB(m);if(m==0)x+=`<attributes>${HEAD("")}<staves>2</staves><clef number="1">${CLX({s:"G",l:2})}</clef><clef number="2">${CLX({s:"F",l:4})}</clef></attributes>${TEMPO()}`;
    S.forEach((pt,p)=>{x+=pt[m].map(n=>nx(n,false,p+1,p<h?1:2)).join("");if(p<N-1)x+=`<backup><duration>${pt[m].reduce((t,n)=>t+n.d,0)}</duration></backup>`});
-   if(m==L)x+=END();x+="</measure>\n"}
+   x+=RB(m,L);x+="</measure>\n"}
   return x+"</part>\n</score-partwise>\n"}
- P.forEach((p,k)=>{x+=`<part id="P${k+1}">\n`;S[p].forEach((me,m)=>{x+=MH(m);if(m==0)x+=`<attributes>${HEAD(`<clef>${CLX(clefOf(p))}</clef>`)}</attributes>${TEMPO()}`;
-  x+=me.map(n=>nx(n,true)).join("");if(m==L)x+=END();x+="</measure>\n"});x+="</part>\n"});
+ P.forEach((p,k)=>{x+=`<part id="P${k+1}">\n`;S[p].forEach((me,m)=>{x+=MH(m)+LB(m);if(m==0)x+=`<attributes>${HEAD(`<clef>${CLX(clefOf(p))}</clef>`)}</attributes>${TEMPO()}`;
+  x+=me.map(n=>nx(n,true)).join("");x+=RB(m,L);x+="</measure>\n"});x+="</part>\n"});
  return x+"</score-partwise>\n"}
 // ---------- Import ----------
-function importXml(txt){const d=new DOMParser().parseFromString(txt,"application/xml");if(d.querySelector("parsererror"))throw new Error("Keine gültige MusicXML-Datei (.mxl bitte vorher entpacken).");
+function importXml(txt){const d=new DOMParser().parseFromString(txt,"application/xml");if(d.querySelector("parsererror"))throw new Error("Keine gültige MusicXML-Datei.");
  const g=(e,t)=>e.getElementsByTagName(t)[0],tx=(e,t)=>{const x=g(e,t);return x?x.textContent.trim():null};
+ const HMAP={major:"",minor:"m",dominant:"7","minor-seventh":"m7","major-seventh":"maj7",diminished:"dim",augmented:"aug","suspended-fourth":"sus4","suspended-second":"sus2","major-sixth":"6","minor-sixth":"m6"};
+ const harmT=h=>{const rs=tx(h,"root-step")||"C",ra=Math.round(+(tx(h,"root-alter")||0)),k=g(h,"kind"),kt=k?k.textContent.trim():"major",ta=k&&k.getAttribute("text"),bs=tx(h,"bass-step");
+  const r=rs=="B"?(ra<0?"B":ra>0?"H#":"H"):rs+(ra>0?"#":ra<0?"b":"");
+  return r+(ta?ta:(HMAP[kt]!==undefined?HMAP[kt]:""))+(bs?"/"+(bs=="B"?"H":bs):"")};
  const nm0={};[...d.getElementsByTagName("score-part")].forEach(s=>nm0[s.getAttribute("id")]=tx(s,"part-name")||"Stimme");
- const OS=[],NMS=[],CLS=[];let ts=[4,4],key=0,pick=false,skipped=false;
- [...d.getElementsByTagName("part")].forEach((part,pi)=>{let div=8,staves=1;const cl={},fv={},out={},ms=[...part.getElementsByTagName("measure")];
+ const OS=[],NMS=[],CLS=[],MK=[];let ts=[4,4],key=0,pick=false,skipped=false;
+ [...d.getElementsByTagName("part")].forEach((part,pi)=>{let div=8,staves=1,pend={cs:"",tx:""};const cl={},fv={},out={},ms=[...part.getElementsByTagName("measure")];
   ms.forEach((me,mi)=>{const at=g(me,"attributes");
    if(at){if(tx(at,"divisions"))div=+tx(at,"divisions");if(tx(at,"staves"))staves=+tx(at,"staves");
     if(pi==0&&mi==0){if(tx(at,"fifths")!==null)key=+tx(at,"fifths");if(tx(at,"beats"))ts=[+tx(at,"beats"),+tx(at,"beat-type")];pick=me.getAttribute("implicit")=="yes"}
     [...at.getElementsByTagName("clef")].forEach(c=>cl[c.getAttribute("number")||"1"]={s:tx(c,"sign")=="percussion"?"G":tx(c,"sign"),l:+tx(c,"line")||2})}
    for(let s=1;s<=staves;s++)(out[s]=out[s]||[])[mi]=[];
-   [...me.children].forEach(ne=>{if(ne.tagName!="note"||g(ne,"grace"))return;const st=+tx(ne,"staff")||1,v=tx(ne,"voice")||"1";
+   [...me.children].forEach(ne=>{
+    if(ne.tagName=="barline"&&pi==0){const r=g(ne,"repeat");if(r){MK[mi]=MK[mi]||{};if(r.getAttribute("direction")=="forward")MK[mi].rs=true;else MK[mi].re=true}return}
+    if(ne.tagName=="harmony"){pend.cs=harmT(ne);return}
+    if(ne.tagName=="direction"){const w=g(ne,"words");if(w&&w.textContent.trim())pend.tx=w.textContent.trim();return}
+    if(ne.tagName!="note"||g(ne,"grace"))return;const st=+tx(ne,"staff")||1,v=tx(ne,"voice")||"1";
     if(fv[st]===undefined)fv[st]=v;if(v!==fv[st]){skipped=true;return}
     const L=out[st][mi],pit=g(ne,"pitch");
     if(g(ne,"chord")){if(L.length&&pit){const q=L[L.length-1],a=Math.max(-1,Math.min(1,Math.round(+(tx(pit,"alter")||0))));q.ch.push(ps(tx(pit,"step"),a,tx(pit,"octave")))}return}
     const raw=Math.round(+tx(ne,"duration")*8/div),dd=ALLOW.reduce((b,x)=>Math.abs(x-raw)<Math.abs(b-raw)?x:b,1);
-    const n={s:"C",o:4,a:0,d:dd,sl:"",ch:[],r:!pit,ly:["",""]};
+    const n={s:"C",o:4,a:0,d:dd,sl:"",ch:[],r:!pit,ly:["",""],cs:pend.cs,tx:pend.tx};pend={cs:"",tx:""};
     if(pit){n.s=tx(pit,"step");n.o=+tx(pit,"octave");n.a=Math.max(-2,Math.min(2,Math.round(+(tx(pit,"alter")||0))))}
     const sl=[...ne.getElementsByTagName("slur")].map(x=>x.getAttribute("type"));if(sl.includes("start")&&!sl.includes("stop"))n.sl="s";else if(sl.includes("stop")&&!sl.includes("start"))n.sl="e";
     [...ne.getElementsByTagName("lyric")].forEach(l=>{const k=(+l.getAttribute("number")||1)-1;if(k<2){const sy=tx(l,"syllabic");n.ly[k]=(tx(l,"text")||"")+(sy=="begin"||sy=="middle"?"-":"")}});
@@ -450,10 +480,22 @@ function importXml(txt){const d=new DOMParser().parseFromString(txt,"application
  OS.forEach(p=>{for(let m=0;m<nM;m++){if(!p[m]||!p[m].length)p[m]=rests(m==0&&pick?OS[0][0].reduce((a,n)=>a+n.d,0)||f:f)}});
  const exp=Array(nM).fill(f);if(pick){exp[0]=OS[0][0].reduce((a,n)=>a+n.d,0);if(nM>1)exp[nM-1]=f-exp[0]}
  const gi=(nme,c)=>{const t=nme.toLowerCase();return/viola|brat/.test(t)?1:/cell/.test(t)?2:/viol|geig/.test(t)?0:/pian|klav|piano/.test(t)?3:/fl[öo]te|flute/.test(t)?4:/ob/.test(t)?5:/fag|bass/.test(t)?7:/guit|git/.test(t)?8:c.s=="F"?2:c.s=="C"?1:0};
- snap();S=OS;M={title:tx(d,"work-title")||tx(d,"movement-title")||"Importiert",names:NMS,clefs:CLS,ins:NMS.map((n,i)=>gi(n,CLS[i])),exp,ts,key,bpm:bpm||84,vol:NMS.map(()=>100),end:"fin"};HID.clear();
+ snap();S=OS;M={title:tx(d,"work-title")||tx(d,"movement-title")||"Importiert",names:NMS,clefs:CLS,ins:NMS.map((n,i)=>gi(n,CLS[i])),exp,ts,key,bpm:bpm||84,vol:NMS.map(()=>100),end:"fin",mk:Array.from({length:nM},(_,i)=>MK[i]||{})};HID.clear();
  sel={p:0,m:Math.min(1,nM-1),i:0};save();fill();render();
  if(skipped)alert("Hinweis: Bei mehrstimmigen Systemen wurde nur die erste Stimme je System übernommen.")}
-$("file").addEventListener("change",e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{try{importXml(r.result)}catch(x){alert(x.message)}};r.readAsText(f);e.target.value=""});
+async function readMxl(buf){const v=new DataView(buf),u=new Uint8Array(buf);let e=buf.byteLength-22;while(e>=0&&v.getUint32(e,true)!=0x06054b50)e--;if(e<0)throw new Error("Keine gültige .mxl-Datei.");
+ const n=v.getUint16(e+10,true);let o=v.getUint32(e+16,true);const F={};
+ for(let k=0;k<n;k++){if(v.getUint32(o,true)!=0x02014b50)break;const cm=v.getUint16(o+10,true),cs=v.getUint32(o+20,true),nl=v.getUint16(o+28,true),el=v.getUint16(o+30,true),cl=v.getUint16(o+32,true),lo=v.getUint32(o+42,true),name=new TextDecoder().decode(u.subarray(o+46,o+46+nl));
+  F[name]={cm,cs,lo};o+=46+nl+el+cl}
+ const get=async nm=>{const f=F[nm];if(!f)return null;const ds=f.lo+30+v.getUint16(f.lo+26,true)+v.getUint16(f.lo+28,true),raw=u.subarray(ds,ds+f.cs);
+  if(f.cm==0)return new TextDecoder().decode(raw);if(typeof DecompressionStream=="undefined")throw new Error("Dieser Browser kann .mxl nicht entpacken. Bitte als .musicxml speichern.");
+  const st=new Blob([raw]).stream().pipeThrough(new DecompressionStream("deflate-raw"));return new TextDecoder().decode(await new Response(st).arrayBuffer())};
+ let root=null;const c=await get("META-INF/container.xml");if(c){const m=/full-path="([^"]+)"/.exec(c);if(m)root=m[1]}
+ if(!root)root=Object.keys(F).find(k=>/\.(xml|musicxml)$/i.test(k)&&!k.startsWith("META-INF"));
+ const t=root&&await get(root);if(!t)throw new Error("In der .mxl-Datei wurde keine Notendatei gefunden.");return t}
+$("file").addEventListener("change",e=>{const f=e.target.files[0];if(!f)return;e.target.value="";
+ if(/\.mxl$/i.test(f.name)){f.arrayBuffer().then(readMxl).then(importXml).catch(x=>alert(x.message));return}
+ const r=new FileReader();r.onload=()=>{try{importXml(r.result)}catch(x){alert(x.message)}};r.readAsText(f)});
 async function dl(){const mode=$("exp").value,data=xml(mode),fn=`noten-${mode}.musicxml`;let ok=false;
  if(typeof claude!="undefined"){try{const d=await claude.use("downloads");if(d){await d.save({filename:fn,data});ok=true}}catch(e){}
   if(!ok){const t=$("xml");t.value=data;t.hidden=false;t.select();alert("Direkter Download nicht möglich – der XML-Text steht unten zum Kopieren.")}return}
@@ -486,18 +528,20 @@ const pit=n=>[midi(n.s,n.a,n.o),...n.ch.map(c=>{const q=pp(c);return midi(q.s,q.
 function preview(){const n=cur();if(!n||n.r||PLAY)return;try{const c=ac(),m=c.createGain();m.gain.value=.25*ST.mvol/100;m.connect(c.destination);
  pit(n).forEach(x=>tone(INSTR[M.ins[sel.p]][0],x,c.currentTime+.02,.5,.5*(M.vol[sel.p]??100)/100,m));setTimeout(()=>m.disconnect(),1200)}catch(e){}}
 function click(c,mg,t,acc){const o=c.createOscillator(),g=c.createGain();o.frequency.value=acc?1500:1000;g.gain.setValueAtTime(.0001,t);g.gain.linearRampToValueAtTime(acc?.5:.3,t+.002);g.gain.exponentialRampToValueAtTime(.0001,t+.05);o.connect(g);g.connect(mg);o.start(t);o.stop(t+.06)}
-function play(){const c=ac();stop();const e=7.5/M.bpm,use=S.map((_,p)=>p).filter(p=>!HID.has(p));
- if(!use.length)return;const ts=ST.from?MS(sel.m)+S[sel.p][sel.m].slice(0,sel.i).reduce((a,n)=>a+n.d,0):0,m0=c.createGain();m0.gain.value=.2*ST.mvol/100;m0.connect(c.destination);
+function repOrder(){const o=[],n=M.exp.length,done=new Set();let m=0,st=0;
+ while(m<n&&o.length<n*8){o.push(m);const k=M.mk[m]||{};if(k.rs)st=m;if(k.re&&!done.has(m)){done.add(m);m=st;continue}m++}return o}
+function play(){const c=ac();stop();const e=7.5/M.bpm,use=S.map((_,p)=>p).filter(p=>!HID.has(p)),ORD=repOrder(),VS=[];let va=0;ORD.forEach(m=>{VS.push(va);va+=M.exp[m]});
+ if(!use.length)return;const k0=Math.max(0,ORD.indexOf(sel.m)),ts=ST.from?VS[k0]+S[sel.p][sel.m].slice(0,sel.i).reduce((a,n)=>a+n.d,0):0,m0=c.createGain();m0.gain.value=.2*ST.mvol/100;m0.connect(c.destination);
  let wet=null;if(ST.rev){const conv=c.createConvolver(),n=Math.floor(c.sampleRate*1.8),buf=c.createBuffer(2,n,c.sampleRate);
   for(let ch=0;ch<2;ch++){const d=buf.getChannelData(ch);for(let i=0;i<n;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/n,2.5)}
   conv.buffer=buf;wet=c.createGain();wet.gain.value=.35;m0.connect(conv);conv.connect(wet);wet.connect(c.destination)}
  const base=c.currentTime+.15-ts*e,L=[];
- use.forEach(p=>{const vv=.5*(M.vol[p]??100)/100;for(let m=0;m<M.exp.length;m++){let t=MS(m);S[p][m].forEach((n,i)=>{const b2=t+n.d;
-  if(b2>ts){const st=Math.max(t,ts);if(!n.r&&vv>0)pit(n).forEach(x=>tone(INSTR[M.ins[p]][0],x,base+st*e,Math.max(.04,(b2-st)*e*.97),vv,m0));L.push({k:p+","+m+","+i,a:st,b:b2})}t=b2})}});
+ use.forEach(p=>{const vv=.5*(M.vol[p]??100)/100;ORD.forEach((m,kk)=>{let t=VS[kk];S[p][m].forEach((n,i)=>{const b2=t+n.d;
+  if(b2>ts){const st=Math.max(t,ts);if(!n.r&&vv>0)pit(n).forEach(x=>tone(INSTR[M.ins[p]][0],x,base+st*e,Math.max(.04,(b2-st)*e*.97),vv,m0));L.push({k:p+","+m+","+i,a:st,b:b2})}t=b2})})});
  if(!L.length)return;
  const mg=c.createGain();mg.gain.value=ST.met?1:0;mg.connect(c.destination);
- if(ST.met){const bl=beatLen(),pk=M.exp[0]<full(),fl=full();for(let m=0;m<M.exp.length;m++){const po=(m==0&&pk)?fl-M.exp[0]:0;
-  for(let k=0;k*bl<fl;k++){const pos=k*bl-po;if(pos<0||pos>=M.exp[m])continue;const tt=MS(m)+pos;if(tt>=ts)click(c,mg,base+tt*e,k==0)}}}
+ if(ST.met){const bl=beatLen(),pk=M.exp[0]<full(),fl=full();ORD.forEach((m,kk)=>{const po=(m==0&&pk)?fl-M.exp[0]:0;
+  for(let k=0;k*bl<fl;k++){const pos=k*bl-po;if(pos<0||pos>=M.exp[m])continue;const tt=VS[kk]+pos;if(tt>=ts)click(c,mg,base+tt*e,k==0)}})}
  const times=[...new Set(L.map(x=>x.a))].sort((x,y)=>x-y),last=Math.max(...L.map(x=>x.b)),T=[];
  times.forEach(t=>T.push(setTimeout(()=>{PL.clear();L.filter(x=>x.a<=t&&x.b>t).forEach(x=>PL.add(x.k));render();follow()},(t-ts)*e*1000+150)));
  T.push(setTimeout(stop,(last-ts)*e*1000+600));PLAY={m0,wet,mg,T}}
